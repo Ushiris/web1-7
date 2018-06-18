@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class PlayerController : MonoBehaviour
     Animator
         animator;
     float
-        jumpForce = 300.0f,
+        jumpForce = 600.0f,
         walkForce = 30.0f,
         maxWalkSpeed = 2.0f;
 
@@ -47,11 +48,22 @@ public class PlayerController : MonoBehaviour
 
         float speedx = Mathf.Abs(rigid2D.velocity.x);
 
-        if(speedx<maxWalkSpeed)
+        //最大速度でも方向転換ができるようにしました
+        if (rigid2D.velocity.x < maxWalkSpeed&&key==1|| rigid2D.velocity.x > -maxWalkSpeed && key == -1)
         {
             rigid2D.AddForce(transform.right * key * walkForce);
         }
         
         animator.speed = speedx / 2.0f;
+
+        if(transform.position.y<=-10)
+        {
+            SceneManager.LoadScene("GameScene");
+        }
 	}
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        SceneManager.LoadScene("ClearScene");
+    }
 }
